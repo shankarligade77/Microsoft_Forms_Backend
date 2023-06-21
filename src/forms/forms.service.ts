@@ -7,8 +7,8 @@ import { ItemEntity } from 'src/items/entity/items.entity';
 @Injectable()
 export class FormsService {
   constructor(private jwtService: JwtService) {}
-  async forms() {
-    return await FormEntity.find();
+  async forms(id: number) {
+    return await FormEntity.findBy({id:id});
   }
 
 
