@@ -9,25 +9,36 @@ import { ItemEntity } from 'src/items/entity/items.entity';
 import { ItemsType } from 'src/items/types/items.type';
 import { Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt.auth.guard';
+import { ItemsInputType } from 'src/items/types/items.input.type';
 
 @Resolver(() => FormsType)
 export class FormsResolver {
   constructor(private formsService: FormsService) {}
 
-  @Query(() => [FormsType])
-  @UseGuards(JwtAuthGuard)
-  forms(@GetForm('form') form: FormEntity) {
-    return this.formsService.forms(form.id);
-  }
 
- 
+@Query(()=>[FormsType])
+forms(){
+  return this.formsService.forms();
+}
+
+@Query(()=>[ItemsType])
+editForm(@Args('id') id:number){
+  return this.formsService.editForm(id);
+}
+
+
 
   @Mutation(() => FormsResponseType)
   createform(@Args('input') input: FormsInputType) {
     return this.formsService.createForm(input);
   }
 
-  @Mutation(() => FormsResponseType)
+
+
+
+
+
+  @Mutation(() => FormsType)
   deleteForm(@Args('id') id: number){
     return this.formsService.deleteForm(id);
   }

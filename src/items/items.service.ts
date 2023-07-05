@@ -10,16 +10,13 @@ export class ItemsService {
     return await ItemEntity.findBy({ formId: id });
   }
 
- 
-
-
-  async addItems(form: FormEntity, input: ItemsInputType[]){
+  async addItems(form: FormEntity, input: ItemsInputType[]) {
     input.map(async (tmp) => {
-      const { question, description,QuestionType } = tmp;
+      const { question, description, QuestionType } = tmp;
       const item = new ItemEntity();
       item.question = question;
       item.description = description;
-      item.QuestionType=QuestionType;
+      item.QuestionType = QuestionType;
       item.form = form;
       await item.save();
     });
@@ -27,6 +24,29 @@ export class ItemsService {
     var result = `Items Inserted successfully!!`;
     return { result };
   }
+
+  async updateItems(id: number, form: FormEntity, input: ItemsInputType[]) {
+    const data = await ItemEntity.findBy({ formId: id });
+    if (data) {
+      data.map((val) => {
+        val.remove();
+      });
+    }
+
+    input.map(async (tmp) => {
+      const { question, description, QuestionType } = tmp;
+      const item = new ItemEntity();
+      item.question = question;
+      item.description = description;
+      item.QuestionType = QuestionType;
+      item.form = form;
+      await item.save();
+    });
+
+    var result = `Items Inserted successfully!!`;
+    return { result };
+  }
+
   async deleteItem(id: number) {
     const item = await ItemEntity.findOneBy({ id });
     if (!item) throw new NotFoundException('Item not Found');

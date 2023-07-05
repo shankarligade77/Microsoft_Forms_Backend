@@ -7,8 +7,8 @@ import { ItemEntity } from 'src/items/entity/items.entity';
 @Injectable()
 export class FormsService {
   constructor(private jwtService: JwtService) {}
-  async forms(id: number) {
-    return await FormEntity.findBy({id:id});
+  async forms() {
+    return await FormEntity.find();
   }
 
 
@@ -20,7 +20,7 @@ export class FormsService {
         id: form.id,
         name: form.title,
       };
-
+      console.log(payload.id,"form chi id ahe 1")
       const token = this.jwtService.sign(payload);
 
       return { token };
@@ -35,22 +35,20 @@ export class FormsService {
         id: form.id,
         name: form.title,
       };
-
+      console.log(payload.id,"form chi id ahe 2")
       const token = this.jwtService.sign(payload);
 
       return { token };
     }
   }
 
-  // async deleteForm(id: number) {
-  //   const form = await FormEntity.findBy({ id });
-  //   console.log(form, 'formssssssssssssss');
-  //   await FormEntity.remove(form);
-  // }
+ 
+ 
 
   async deleteForm(id: number) {
     const form = await FormEntity.findOneBy({id});
     const data= await ItemEntity.findBy({ formId: id });
+
     console.log(data);
     data.map((val)=>{
       val.remove();
@@ -58,9 +56,30 @@ export class FormsService {
     if (!form) {
       throw new NotFoundException(`Form with ID ${id} not found`);
     }
-    await FormEntity.remove(form);
-    const result=`Form with ID ${id} deleted successfully`
-    return result;
+
+    await form.remove();
+ 
+  console.log(form,"delete form data")
+    return form;
+  } 
+
+
+
+
+
+  async editForm(id: number) {
+    const data= await ItemEntity.findBy({ formId: id });
+    // console.log(data);
+   
+    if (!data) {
+      throw new NotFoundException(`Form with ID ${id} has no data`);
+    }
+    data.map((val)=>{
+      console.log(val);
+    })
+   
+    return data;
   } 
 }
+
 
